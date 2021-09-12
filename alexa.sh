@@ -22,7 +22,7 @@ METADATA="{\
 \"messageHeader\": {},\
 \"messageBody\": {\
 \"profile\": \"alexa-close-talk\",\
-\"locale\": \"en-us\",\
+\"locale\": \"pt-br\",\
 \"format\": \"audio/L16; rate=16000; channels=1\"\
 }\
 }"
@@ -53,7 +53,7 @@ POST_DATA_END="${NEWLINE}${NEWLINE}${BOUNDARY_DASHES}${BOUNDARY}${BOUNDARY_DASHE
 ############################################################
 
 # Write metadata to a file which will contain the multipart request body content.
-echo -e $POST_DATA_START > multipart_body.txt
+echo $POST_DATA_START > multipart_body.txt
 
 # Here we append the binary audio data to request body file
 # by spitting out the contents. We do it this way so that
@@ -61,13 +61,13 @@ echo -e $POST_DATA_START > multipart_body.txt
 #cat $AUDIO_FILENAME >> multipart_body.txt
 echo "Question: ${QUESTION}"
 echo "Creating voice..."
-#espeak -v en-us "${QUESTION}" --stdout | tee espeak.out | sox - -c 1 -r 16000 -e signed -b 16 -t wav - >> multipart_body.txt
-rm /tmp/pipe.wav
-ln -s /dev/stdout /tmp/pipe.wav
-pico2wave -w /tmp/pipe.wav "${QUESTION}" | tee pico2wav.wav | sox - -c 1 -r 16000 -e signed -b 16 -t wav - >> multipart_body.txt
+espeak -v pt "${QUESTION}" --stdout | tee espeak.out | sox - -c 1 -r 16000 -e signed -b 16 -t wav - >> multipart_body.txt
+# rm /tmp/pipe.wav
+# ln -s /dev/stdout /tmp/pipe.wav
+# pico2wave -w /tmp/pipe.wav "${QUESTION}" | tee pico2wav.wav | sox - -c 1 -r 16000 -e signed -b 16 -t wav - >> multipart_body.txt
 
 # Then we append closing boundary to request body file.
-echo -e $POST_DATA_END >> multipart_body.txt
+echo $POST_DATA_END >> multipart_body.txt
 
 ############################################################
 # Finally we get to compose the cURL request command
